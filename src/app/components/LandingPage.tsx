@@ -63,18 +63,18 @@ export default function LandingPage() {
       throw new Error('Missing Supabase environment variables');
     }
 
-    const response = await fetch(`${supabaseUrl}/rest/v1/waitlist_signups?on_conflict=email,role`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/insert_waitlist_signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         apikey: supabasePublishableKey,
-        Prefer: 'resolution=merge-duplicates,return=minimal'
+        Authorization: `Bearer ${supabasePublishableKey}`
       },
       body: JSON.stringify({
-        email: signupEmail.trim().toLowerCase(),
-        role,
-        language,
-        source: 'landingpage_gilde'
+        signup_email: signupEmail.trim().toLowerCase(),
+        signup_role: role,
+        signup_language: language,
+        signup_source: 'landingpage_gilde'
       })
     });
 
