@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GILDE Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #151538;
+        --bg-strong: #0d0d24;
+        --card: rgba(255, 255, 255, 0.05);
+        --card-strong: rgba(255, 255, 255, 0.08);
+        --border: rgba(255, 255, 255, 0.12);
+        --text: #ffffff;
+        --muted: rgba(255, 255, 255, 0.7);
+        --soft: rgba(255, 255, 255, 0.45);
+        --accent: #2fa4a9;
+        --accent-dark: #238d92;
+        --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background:
+          radial-gradient(circle at top center, rgba(47, 164, 169, 0.16), transparent 30%),
+          var(--bg);
+        color: var(--text);
+      }
+
+      img {
+        display: block;
+        width: 100%;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      .container {
+        width: min(1400px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .section {
+        padding: 96px 0;
+        border-top: 1px solid var(--border);
+      }
+
+      .header {
+        padding: 24px 0;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(16px);
+        background: rgba(21, 21, 56, 0.85);
+      }
+
+      .header-inner,
+      .lang-switch {
+        display: flex;
+        align-items: center;
+      }
+
+      .header-inner {
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        font-family: "Outfit", sans-serif;
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .lang-switch {
+        gap: 8px;
+      }
+
+      .lang-btn {
+        padding: 8px 12px;
+        border: 0;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.45);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .lang-btn.active {
+        color: var(--accent);
+      }
+
+      .hero-grid,
+      .ai-grid,
+      .services-grid {
+        display: grid;
+        gap: 32px;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+        align-items: center;
+        gap: 80px;
+      }
+
+      .headline,
+      .section-title,
+      .cta-title {
+        font-family: "Outfit", sans-serif;
+        margin: 0;
+        letter-spacing: -0.05em;
+      }
+
+      .headline {
+        font-size: clamp(52px, 8vw, 84px);
+        line-height: 0.9;
+        margin-bottom: 28px;
+      }
+
+      .section-title {
+        font-size: clamp(36px, 5vw, 56px);
+        line-height: 1;
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .cta-title {
+        font-size: clamp(34px, 4.6vw, 42px);
+        line-height: 1.1;
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .accent {
+        color: var(--accent);
+      }
+
+      .lead {
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1.7;
+        margin: 0 0 36px;
+      }
+
+      .small-note {
+        color: var(--soft);
+        font-size: 14px;
+        margin: 14px 0 0;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+      }
+
+      .image-card {
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .image-card img {
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .email-input {
+        flex: 1;
+        min-width: 0;
+        height: 64px;
+        padding: 0 24px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      .email-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .email-input:focus {
+        outline: 2px solid rgba(47, 164, 169, 0.45);
+        border-color: var(--accent);
+      }
+
+      .cta-btn {
+        border: 0;
+        border-radius: 4px;
+        background: var(--accent);
+        color: var(--text);
+        font-weight: 700;
+        min-width: 220px;
+        padding: 0 28px;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(47, 164, 169, 0.4);
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+
+      .cta-btn:hover {
+        background: #27939a;
+        transform: translateY(-1px);
+      }
+
+      .success {
+        display: none;
+        align-items: center;
+        gap: 12px;
+        width: fit-content;
+        padding: 18px 24px;
+        border: 1px solid var(--accent);
+        border-radius: 4px;
+        background: rgba(47, 164, 169, 0.1);
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .success.show {
+        display: inline-flex;
+      }
+
+      .ai-wrapper {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .glow {
+        position: absolute;
+        inset: 50% auto auto 50%;
+        width: 600px;
+        height: 600px;
+        transform: translate(-50%, -50%);
+        border-radius: 999px;
+        background: rgba(47, 164, 169, 0.14);
+        filter: blur(140px);
+        pointer-events: none;
+      }
+
+      .ai-grid {
+        grid-template-columns: minmax(0, 1.2fr) auto minmax(0, 1.2fr);
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .info-box,
+      .result-box {
+        min-height: 280px;
+        padding: 36px;
+        position: relative;
+      }
+
+      .info-box {
+        border: 2px dashed rgba(255, 255, 255, 0.2);
+      }
+
+      .result-box {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        box-shadow: 0 20px 50px rgba(47, 164, 169, 0.45);
+      }
+
+      .box-label {
+        position: absolute;
+        top: -14px;
+        left: 24px;
+        padding: 6px 14px;
+        background: var(--bg);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .info-text,
+      .caption {
+        color: var(--muted);
+      }
+
+      .info-text {
+        font-size: 17px;
+        line-height: 1.8;
+      }
+
+      .result-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 18px;
+      }
+
+      .tick {
+        flex: 0 0 22px;
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.22);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .bolt {
+        width: 92px;
+        height: 92px;
+        display: grid;
+        place-items: center;
+        position: relative;
+      }
+
+      .bolt::before,
+      .bolt::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+      }
+
+      .bolt::before {
+        background: rgba(47, 164, 169, 0.16);
+        animation: pulse 1.8s infinite;
+      }
+
+      .bolt::after {
+        inset: 22px;
+        background: rgba(47, 164, 169, 0.22);
+      }
+
+      .bolt span {
+        position: relative;
+        z-index: 1;
+        color: var(--accent);
+        font-size: 36px;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1.08);
+          opacity: 1;
+        }
+      }
+
+      .caption {
+        max-width: 780px;
+        margin: 28px auto 0;
+        text-align: center;
+        font-size: 18px;
+        line-height: 1.8;
+      }
+
+      .local-section {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .local-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(rgba(21, 21, 56, 0.82), rgba(21, 21, 56, 0.82)),
+          url("https://images.unsplash.com/photo-1476385822777-70eabacbd41f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTdHV0dGdhcnQlMjBHZXJtYW55JTIwY2l0eXNjYXBlJTIwbWFwfGVufDF8fHx8MTc3NDQ4Mzc1N3ww&ixlib=rb-4.1.0&q=80&w=1600")
+            center/cover;
+        opacity: 0.92;
+      }
+
+      .local-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 820px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .service-card {
+        padding: 36px 28px;
+        text-align: center;
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      }
+
+      .service-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(47, 164, 169, 0.45);
+        background: var(--card-strong);
+      }
+
+      .service-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 18px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        background: rgba(47, 164, 169, 0.12);
+        font-size: 28px;
+      }
+
+      .service-title {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 600;
+      }
+
+      .bottom-cta {
+        background: var(--bg-strong);
+      }
+
+      .bottom-cta .container,
+      footer .container {
+        max-width: 800px;
+        text-align: center;
+      }
+
+      footer {
+        padding: 64px 0;
+        border-top: 1px solid var(--border);
+        background: var(--bg-strong);
+      }
+
+      .footer-tagline {
+        margin: 12px 0 0;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .panel {
+        display: none;
+      }
+
+      .panel.active {
+        display: block;
+      }
+
+      @media (max-width: 1100px) {
+        .hero-grid,
+        .ai-grid,
+        .services-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-grid {
+          gap: 40px;
+        }
+
+        .bolt {
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .section {
+          padding: 72px 0;
+        }
+
+        .container {
+          width: min(100% - 24px, 1400px);
+        }
+
+        .form-row {
+          flex-direction: column;
+        }
+
+        .cta-btn {
+          width: 100%;
+          min-height: 60px;
+        }
+
+        .info-box,
+        .result-box {
+          padding: 28px 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header-inner">
+        <div class="brand">GILDE</div>
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="lang-btn active" data-lang="de">DE</button>
+          <span>|</span>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section" style="border-top: 0">
+        <div class="container">
+          <div class="panel active" data-panel="de">
+            <div class="hero-grid">
+              <div>
+                <h1 class="headline">
+                  Aufgaben im Haushalt?<br />
+                  <span class="accent">Erledigt.</span>
+                </h1>
+                <p class="lead">
+                  Beschreibe dein Problem in einfachen Worten. Wir kümmern uns um alles andere.
+                </p>
+                <form class="signup-form">
+                  <div class="form-row">
+                    <input class="email-input" type="email" placeholder="deine.email@beispiel.de" required />
+                    <button class="cta-btn" type="submit">Frühen Zugang sichern</button>
+                  </div>
+                </form>
+                <div class="success">✓ Du bist auf der Liste! Wir melden uns bald.</div>
+                <p class="small-note">Kein Spam. Nur eine Info, wenn wir starten.</p>
+              </div>
+              <div class="card image-card">
+                <img
+                  src="https://images.unsplash.com/photo-1683115097173-f24516d000c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbnRlcmlvciUyMGhvbWUlMjB3b3JrYmVuY2glMjB0b29sc3xlbnwxfHx8fDE3NzQ0ODM3NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                  alt="Professional tool board"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="en">
+            <div class="hero-grid">
+              <div>
+                <h1 class="headline">
+                  Home tasks?<br />
+                  <span class="accent">Consider them done.</span>
+                </h1>
+                <p class="lead">
+                  Describe your problem in plain words. We handle everything else.
+                </p>
+                <form class="signup-form">
+                  <div class="form-row">
+                    <input class="email-input" type="email" placeholder="your.email@example.com" required />
+                    <button class="cta-btn" type="submit">Get Early Access</button>
+                  </div>
+                </form>
+                <div class="success">✓ You're on the list! We'll be in touch soon.</div>
+                <p class="small-note">No spam. Just a heads-up when we launch.</p>
+              </div>
+              <div class="card image-card">
+                <img
+                  src="https://images.unsplash.com/photo-1683115097173-f24516d000c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbnRlcmlvciUyMGhvbWUlMjB3b3JrYmVuY2glMjB0b29sc3xlbnwxfHx8fDE3NzQ0ODM3NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                  alt="Professional tool board"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section ai-wrapper">
+        <div class="glow"></div>
+        <div class="container">
+          <div class="panel active" data-panel="de">
+            <h2 class="section-title">Mehr als ein Chat. Dein virtueller Projektmanager.</h2>
+            <div class="ai-grid">
+              <div class="card info-box">
+                <div class="box-label">User's Chaos</div>
+                <p class="info-text">
+                  Muss eine Wand in Navy Blau streichen (~15m²). Hab keine Farbe, kein Werkzeug, und ein riesiges Sofa steht im Weg. Kann das jemand Samstag machen?
+                </p>
+              </div>
+              <div class="bolt" aria-hidden="true"><span>⚡</span></div>
+              <div class="card result-box">
+                <div class="box-label">The Result</div>
+                <div class="result-item"><span class="tick">✓</span><span><strong>Aufgabe: Wandmalerei + Möbel bewegen</strong></span></div>
+                <div class="result-item"><span class="tick">✓</span><span>Benötigte Materialien: 2,5L Mattlack Navy + Schutzkit (Von KI berechnet)</span></div>
+                <div class="result-item"><span class="tick">✓</span><span>Geschätzte Kosten: <strong style="font-size: 28px; color: #151538">€145</strong> (Arbeit + Empfohlene Materialien)</span></div>
+                <div class="result-item"><span class="tick">✓</span><span>Status: Helfer mit "Malerexperte" Tag gefunden</span></div>
+              </div>
+            </div>
+            <p class="caption">
+              Unsere KI identifiziert die Aufgabe, berechnet die Materialien und schätzt die Kosten. Du sagst einfach "Ja".
+            </p>
+          </div>
+
+          <div class="panel" data-panel="en">
+            <h2 class="section-title">More than a chat. Your virtual project manager.</h2>
+            <div class="ai-grid">
+              <div class="card info-box">
+                <div class="box-label">User's Chaos</div>
+                <p class="info-text">
+                  Need to paint one wall navy blue (~15m²). I have no paint, no tools, and a huge sofa blocking everything. Can someone do it Saturday?
+                </p>
+              </div>
+              <div class="bolt" aria-hidden="true"><span>⚡</span></div>
+              <div class="card result-box">
+                <div class="box-label">The Result</div>
+                <div class="result-item"><span class="tick">✓</span><span><strong>Task: Wall Painting & Furniture Moving</strong></span></div>
+                <div class="result-item"><span class="tick">✓</span><span>Materials Needed: 2.5L Matte Navy Paint + Protection Kit (Calculated by AI)</span></div>
+                <div class="result-item"><span class="tick">✓</span><span>Est. Cost: <strong style="font-size: 28px; color: #151538">€145</strong> (Work + Suggested Materials)</span></div>
+                <div class="result-item"><span class="tick">✓</span><span>Status: Helper with "Painting Expert" tag found</span></div>
+              </div>
+            </div>
+            <p class="caption">
+              Our AI identifies the task, calculates the materials, and estimates the cost. You just say "Yes".
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section local-section">
+        <div class="container">
+          <div class="panel active local-inner" data-panel="de">
+            <h2 class="section-title">Der neue Standard in Stuttgart.</h2>
+            <p class="lead">
+              Keine generischen Marktplätze. Wir verbinden dich mit verifizierten lokalen Talenten, die sich wirklich um dein Zuhause kümmern.
+            </p>
+          </div>
+          <div class="panel local-inner" data-panel="en">
+            <h2 class="section-title">Building the new standard in Stuttgart.</h2>
+            <p class="lead">
+              No generic marketplaces. We connect you with verified local talents who actually care about your home.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="panel active" data-panel="de">
+            <h2 class="section-title">Verifizierte Fähigkeiten</h2>
+            <div class="services-grid">
+              <article class="card service-card"><div class="service-icon">🔨</div><p class="service-title">Möbelmontage</p></article>
+              <article class="card service-card"><div class="service-icon">🚚</div><p class="service-title">Umzugshilfe</p></article>
+              <article class="card service-card"><div class="service-icon">🔧</div><p class="service-title">Kleine Reparaturen</p></article>
+              <article class="card service-card"><div class="service-icon">🏠</div><p class="service-title">Haushaltshilfe</p></article>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="en">
+            <h2 class="section-title">Verified Skills</h2>
+            <div class="services-grid">
+              <article class="card service-card"><div class="service-icon">🔨</div><p class="service-title">Furniture Assembly</p></article>
+              <article class="card service-card"><div class="service-icon">🚚</div><p class="service-title">Moving Support</p></article>
+              <article class="card service-card"><div class="service-icon">🔧</div><p class="service-title">Minor Repairs</p></article>
+              <article class="card service-card"><div class="service-icon">🏠</div><p class="service-title">Home Help</p></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section bottom-cta">
+        <div class="container">
+          <div class="panel active" data-panel="de">
+            <h3 class="cta-title">
+              Aufgaben im Haushalt?<br />
+              <span class="accent">Erledigt.</span>
+            </h3>
+            <form class="signup-form">
+              <div class="form-row">
+                <input class="email-input" type="email" placeholder="deine.email@beispiel.de" required />
+                <button class="cta-btn" type="submit">Frühen Zugang sichern</button>
+              </div>
+            </form>
+            <div class="success">✓ Du bist auf der Liste! Wir melden uns bald.</div>
+            <p class="small-note">Kein Spam. Nur eine Info, wenn wir starten.</p>
+          </div>
+
+          <div class="panel" data-panel="en">
+            <h3 class="cta-title">
+              Home tasks?<br />
+              <span class="accent">Consider them done.</span>
+            </h3>
+            <form class="signup-form">
+              <div class="form-row">
+                <input class="email-input" type="email" placeholder="your.email@example.com" required />
+                <button class="cta-btn" type="submit">Get Early Access</button>
+              </div>
+            </form>
+            <div class="success">✓ You're on the list! We'll be in touch soon.</div>
+            <p class="small-note">No spam. Just a heads-up when we launch.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="panel active" data-panel="de">
+          <div class="brand">GILDE</div>
+          <p class="footer-tagline">GILDE - Stuttgarts Nachbarschaftshilfe.</p>
+        </div>
+        <div class="panel" data-panel="en">
+          <div class="brand">GILDE</div>
+          <p class="footer-tagline">GILDE - Stuttgart's neighborhood help.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const buttons = document.querySelectorAll(".lang-btn");
+      const panels = document.querySelectorAll(".panel");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const lang = button.dataset.lang;
+
+          buttons.forEach((item) => {
+            item.classList.toggle("active", item.dataset.lang === lang);
+          });
+
+          panels.forEach((panel) => {
+            panel.classList.toggle("active", panel.dataset.panel === lang);
+          });
+
+          document.documentElement.lang = lang;
+        });
+      });
+
+      document.querySelectorAll(".signup-form").forEach((form) => {
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          form.style.display = "none";
+          const success = form.nextElementSibling;
+          if (success) {
+            success.classList.add("show");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
