@@ -3,6 +3,10 @@ import { ArrowRight, CheckCircle2, Hammer, Home, Sparkles, Truck, Wrench, Zap } 
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 const heroImageSrc = new URL('../../../pexels-pic-1.jpg', import.meta.url).href;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabasePublishableKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+type SignupRole = 'client' | 'pro';
 
 function getInitialLanguage(): 'de' | 'en' {
   if (typeof window === 'undefined') return 'de';
@@ -14,10 +18,16 @@ export default function LandingPage() {
   const [email, setEmail] = useState('');
   const [emailBottom, setEmailBottom] = useState('');
   const [modalEmail, setModalEmail] = useState('');
-  const [modalRole, setModalRole] = useState<'client' | 'pro' | null>(null);
+  const [modalRole, setModalRole] = useState<SignupRole | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmittedBottom, setIsSubmittedBottom] = useState(false);
   const [isModalSubmitted, setIsModalSubmitted] = useState(false);
+  const [isSubmittingTop, setIsSubmittingTop] = useState(false);
+  const [isSubmittingBottom, setIsSubmittingBottom] = useState(false);
+  const [isSubmittingModal, setIsSubmittingModal] = useState(false);
+  const [topError, setTopError] = useState<string | null>(null);
+  const [bottomError, setBottomError] = useState<string | null>(null);
+  const [modalError, setModalError] = useState<string | null>(null);
 
   const t = {
     de: {
@@ -28,6 +38,7 @@ export default function LandingPage() {
       standard: { headline: 'Für Vertrauen gebaut', item1Title: 'Schnell vermittelt', item1Text: 'Überspringe die wochenlange Wartezeit klassischer Agenturen.', item2Title: 'Geprüftes Talent', item2Text: 'Jede Fachkraft wird geprüft und von der Community bewertet.', item3Title: 'Faire Preise', item3Text: 'Keine versteckten Gebühren und keine überraschenden Rückrufe.' },
       community: { headline: 'Zwei Hände. Eine Community.', subheadline: '', clientEyebrow: 'Brauchst du Hilfe?', clientTitle: 'Jetzt zur Warteliste anmelden', clientText: 'Sei unter den Ersten, die Hilfe für Aufgaben zuhause bekommen, wenn wir in deiner Gegend starten. Kein endloses Scrollen mehr durch Profile oder Angebotsvergleiche.', clientCta: 'Ich brauche Hilfe', proEyebrow: 'Hast du Talent?', proTitle: 'Als Helfer vorregistrieren', proText: 'Hast du einen Akkuschrauber? Bist du gut in Montage? Oder einfach talentiert im Reparieren? Hilf deinen Nachbarn und verdiene lokal. Volle Kontrolle über deinen Zeitplan.', proCta: 'Ich kann helfen' },
       modal: { title: 'Zur GILDE-Warteliste', clientRole: 'Hilfesuchend', proRole: 'Helfer', roleLabel: 'Ausgewählte Rolle', emailLabel: 'E-Mail-Adresse', emailPlaceholder: 'deine.email@beispiel.de', submit: 'Zur Warteliste', submitted: 'Danke. Deine Rolle wurde erfasst und du stehst jetzt auf der Warteliste.', close: 'Schließen' },
+      errors: { signupFailed: 'Anmeldung fehlgeschlagen. Bitte versuche es noch einmal.' },
       footer: { tagline: 'GILDE - Nachbarschaftshilfe.', submitted: 'Du bist auf der Liste! Wir melden uns bald.' }
     },
     en: {
@@ -38,17 +49,84 @@ export default function LandingPage() {
       standard: { headline: 'Built for Confidence', item1Title: 'Matched fast', item1Text: 'Skip the weeks-long wait for agencies.', item2Title: 'Verified Talent', item2Text: 'Every specialist is background-checked and rated by the community.', item3Title: 'Fair Pricing', item3Text: 'No hidden fees or surprise calls.' },
       community: { headline: 'Two hands. One community.', subheadline: '', clientEyebrow: 'Need help?', clientTitle: 'Join our waitlist', clientText: 'Be the first to get your home tasks handled when we launch in your area. No more scrolling through endless profiles or comparing quotes.', clientCta: 'I need help', proEyebrow: 'Have talent?', proTitle: 'Pre-register as a helper', proText: 'Got a drill? Skilled at assembly? Or just have a talent for fixing things? Help your neighbors and earn locally. Full control over your schedule.', proCta: 'I can help' },
       modal: { title: 'Join the GILDE waitlist', clientRole: 'Client', proRole: 'Pro', roleLabel: 'Selected role', emailLabel: 'Email address', emailPlaceholder: 'your.email@example.com', submit: 'Join waitlist', submitted: 'Thanks. Your role has been captured and you are on the waitlist.', close: 'Close' },
+      errors: { signupFailed: 'Signup failed. Please try again.' },
       footer: { tagline: "GILDE - Neighborhood help.", submitted: "You're on the list! We'll be in touch soon." }
     }
   };
 
   const content = t[language];
   const selectedRoleLabel = modalRole === 'pro' ? content.modal.proRole : content.modal.clientRole;
-  const openSignupModal = (role: 'client' | 'pro') => { setModalRole(role); setModalEmail(''); setIsModalSubmitted(false); };
-  const closeSignupModal = () => { setModalRole(null); setModalEmail(''); setIsModalSubmitted(false); };
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setIsSubmitted(true); };
-  const handleSubmitBottom = (e: React.FormEvent) => { e.preventDefault(); setIsSubmittedBottom(true); };
-  const handleModalSubmit = (e: React.FormEvent) => { e.preventDefault(); setIsModalSubmitted(true); };
+  const openSignupModal = (role: SignupRole) => { setModalRole(role); setModalEmail(''); setIsModalSubmitted(false); setModalError(null); };
+  const closeSignupModal = () => { setModalRole(null); setModalEmail(''); setIsModalSubmitted(false); setModalError(null); };
+  const submitWaitlistSignup = async (signupEmail: string, role: SignupRole) => {
+    if (!supabaseUrl || !supabasePublishableKey) {
+      throw new Error('Missing Supabase environment variables');
+    }
+
+    const response = await fetch(`${supabaseUrl}/rest/v1/waitlist_signups?on_conflict=email,role`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: supabasePublishableKey,
+        Authorization: `Bearer ${supabasePublishableKey}`,
+        Prefer: 'resolution=merge-duplicates,return=minimal'
+      },
+      body: JSON.stringify({
+        email: signupEmail.trim().toLowerCase(),
+        role,
+        language,
+        source: 'landingpage_gilde'
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Waitlist signup failed with status ${response.status}`);
+    }
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTopError(null);
+    setIsSubmittingTop(true);
+
+    try {
+      await submitWaitlistSignup(email, 'client');
+      setIsSubmitted(true);
+    } catch {
+      setTopError(content.errors.signupFailed);
+    } finally {
+      setIsSubmittingTop(false);
+    }
+  };
+  const handleSubmitBottom = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBottomError(null);
+    setIsSubmittingBottom(true);
+
+    try {
+      await submitWaitlistSignup(emailBottom, 'client');
+      setIsSubmittedBottom(true);
+    } catch {
+      setBottomError(content.errors.signupFailed);
+    } finally {
+      setIsSubmittingBottom(false);
+    }
+  };
+  const handleModalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!modalRole) return;
+
+    setModalError(null);
+    setIsSubmittingModal(true);
+
+    try {
+      await submitWaitlistSignup(modalEmail, modalRole);
+      setIsModalSubmitted(true);
+    } catch {
+      setModalError(content.errors.signupFailed);
+    } finally {
+      setIsSubmittingModal(false);
+    }
+  };
   const renderResultValue = (text: string) => {
     const separatorIndex = text.indexOf(': ');
     if (separatorIndex === -1) return text;
@@ -104,9 +182,10 @@ export default function LandingPage() {
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="mb-4">
                 <div className="flex gap-3">
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={content.hero.emailPlaceholder} required className="flex-1 px-6 bg-white/5 backdrop-blur border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', fontSize: '16px' }} />
-                  <button type="submit" className="bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all flex items-center justify-center gap-3 px-10 group" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.4)' }}>{content.hero.cta}<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={content.hero.emailPlaceholder} required disabled={isSubmittingTop} className="flex-1 px-6 bg-white/5 backdrop-blur border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', fontSize: '16px' }} />
+                  <button type="submit" disabled={isSubmittingTop} className="bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all flex items-center justify-center gap-3 px-10 group disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.4)' }}>{content.hero.cta}<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
                 </div>
+                {topError ? <p className="text-[#ffb4b4] text-sm mt-3" style={{ fontFamily: "'Inter', sans-serif" }}>{topError}</p> : null}
               </form>
             ) : <div className="bg-[#2FA4A9]/10 border border-[#2FA4A9] text-[#2FA4A9] px-6 py-5 inline-flex items-center gap-3 font-semibold mb-4" style={{ fontFamily: "'Inter', sans-serif", borderRadius: '4px' }}><CheckCircle2 className="w-6 h-6" strokeWidth={2.5} />{content.footer.submitted}</div>}
             <p className="text-white/40 text-sm" style={{ fontFamily: "'Inter', sans-serif" }}>{content.hero.noSpam}</p>
@@ -209,9 +288,10 @@ export default function LandingPage() {
           {!isSubmittedBottom ? (
             <form onSubmit={handleSubmitBottom} className="mb-4">
               <div className="flex gap-3 max-w-xl mx-auto">
-                <input type="email" value={emailBottom} onChange={(e) => setEmailBottom(e.target.value)} placeholder={content.hero.emailPlaceholder} required className="flex-1 px-6 bg-white/5 backdrop-blur border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', fontSize: '16px' }} />
-                <button type="submit" className="bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all flex items-center justify-center gap-3 px-10 group" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.4)' }}>{content.hero.cta}<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
+                <input type="email" value={emailBottom} onChange={(e) => setEmailBottom(e.target.value)} placeholder={content.hero.emailPlaceholder} required disabled={isSubmittingBottom} className="flex-1 px-6 bg-white/5 backdrop-blur border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', fontSize: '16px' }} />
+                <button type="submit" disabled={isSubmittingBottom} className="bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all flex items-center justify-center gap-3 px-10 group disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.4)' }}>{content.hero.cta}<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
               </div>
+              {bottomError ? <p className="text-[#ffb4b4] text-sm mt-3" style={{ fontFamily: "'Inter', sans-serif" }}>{bottomError}</p> : null}
             </form>
           ) : <div className="bg-[#2FA4A9]/10 border border-[#2FA4A9] text-[#2FA4A9] px-6 py-5 inline-flex items-center gap-3 font-semibold" style={{ fontFamily: "'Inter', sans-serif", borderRadius: '4px' }}><CheckCircle2 className="w-6 h-6" strokeWidth={2.5} />{content.footer.submitted}</div>}
           <p className="text-white/40 text-sm mt-4" style={{ fontFamily: "'Inter', sans-serif" }}>{content.hero.noSpam}</p>
@@ -235,8 +315,9 @@ export default function LandingPage() {
               <form onSubmit={handleModalSubmit}>
                 <input type="hidden" name="role" value={modalRole} />
                 <label className="block text-white/70 mb-3" style={{ fontFamily: "'Inter', sans-serif", fontSize: '14px' }}>{content.modal.emailLabel}</label>
-                <input type="email" value={modalEmail} onChange={(e) => setModalEmail(e.target.value)} placeholder={content.modal.emailPlaceholder} required className="w-full px-6 bg-white/5 border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition mb-6" style={{ fontFamily: "'Inter', sans-serif", height: '60px', borderRadius: '4px', fontSize: '16px' }} />
-                <button type="submit" className="w-full bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all" style={{ fontFamily: "'Inter', sans-serif", height: '56px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.35)' }}>{content.modal.submit}</button>
+                <input type="email" value={modalEmail} onChange={(e) => setModalEmail(e.target.value)} placeholder={content.modal.emailPlaceholder} required disabled={isSubmittingModal} className="w-full px-6 bg-white/5 border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition mb-6 disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '60px', borderRadius: '4px', fontSize: '16px' }} />
+                <button type="submit" disabled={isSubmittingModal} className="w-full bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '56px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.35)' }}>{content.modal.submit}</button>
+                {modalError ? <p className="text-[#ffb4b4] text-sm mt-4" style={{ fontFamily: "'Inter', sans-serif" }}>{modalError}</p> : null}
               </form>
             ) : <div className="bg-[#2FA4A9]/10 border border-[#2FA4A9] text-[#2FA4A9] px-6 py-5" style={{ fontFamily: "'Inter', sans-serif", borderRadius: '4px' }}>{content.modal.submitted}</div>}
           </div>
