@@ -68,7 +68,6 @@ export default function LandingPage() {
       headers: {
         'Content-Type': 'application/json',
         apikey: supabasePublishableKey,
-        Authorization: `Bearer ${supabasePublishableKey}`,
         Prefer: 'resolution=merge-duplicates,return=minimal'
       },
       body: JSON.stringify({
@@ -80,7 +79,8 @@ export default function LandingPage() {
     });
 
     if (!response.ok) {
-      throw new Error(`Waitlist signup failed with status ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Waitlist signup failed with status ${response.status}: ${errorText}`);
     }
   };
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,7 +91,8 @@ export default function LandingPage() {
     try {
       await submitWaitlistSignup(email, 'client');
       setIsSubmitted(true);
-    } catch {
+    } catch (error) {
+      console.error(error);
       setTopError(content.errors.signupFailed);
     } finally {
       setIsSubmittingTop(false);
@@ -105,7 +106,8 @@ export default function LandingPage() {
     try {
       await submitWaitlistSignup(emailBottom, 'client');
       setIsSubmittedBottom(true);
-    } catch {
+    } catch (error) {
+      console.error(error);
       setBottomError(content.errors.signupFailed);
     } finally {
       setIsSubmittingBottom(false);
@@ -121,7 +123,8 @@ export default function LandingPage() {
     try {
       await submitWaitlistSignup(modalEmail, modalRole);
       setIsModalSubmitted(true);
-    } catch {
+    } catch (error) {
+      console.error(error);
       setModalError(content.errors.signupFailed);
     } finally {
       setIsSubmittingModal(false);
