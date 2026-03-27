@@ -232,15 +232,15 @@
 
   .landing-mobile-signup-input {
     width: 100% !important;
-    height: 60px !important;
+    height: 56px !important;
     padding-left: 20px !important;
     padding-right: 20px !important;
     font-size: 16px !important;
   }
 
   .landing-mobile-signup-button {
-    align-self: flex-start !important;
-    height: 54px !important;
+    align-self: center !important;
+    height: 56px !important;
     font-size: 15px !important;
     padding-left: 20px !important;
     padding-right: 20px !important;
