@@ -166,8 +166,8 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#151538]">
-      <header className="sticky top-0 z-50 py-6 border-b border-white/10 bg-[#151538]/80 backdrop-blur">
-        <div className="max-w-[1400px] mx-auto px-8 flex justify-between items-center">
+      <header className="sticky top-0 z-50 py-4 sm:py-6 border-b border-white/10 bg-[#151538]/80 backdrop-blur">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 flex justify-between items-center">
           <div className="text-2xl font-extrabold text-white" style={{ fontFamily: "'Outfit', sans-serif", letterSpacing: '-0.5px' }}>GILDE</div>
           <div className="flex items-center gap-2">
             <button onClick={() => setLanguage('de')} className={`px-3 py-1.5 text-sm font-semibold transition ${language === 'de' ? 'text-[#2FA4A9]' : 'text-white/40 hover:text-white/70'}`} style={{ fontFamily: "'Inter', sans-serif" }}>DE</button>
@@ -177,14 +177,14 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <section className="py-24 overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-8 grid lg:grid-cols-[1.3fr_0.7fr] gap-20 items-center">
+      <section className="py-16 sm:py-24 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 grid lg:grid-cols-[1.3fr_0.7fr] gap-10 sm:gap-20 items-center">
           <div className="max-w-2xl">
-            <h1 className="text-white mb-8" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '84px', fontWeight: 700, lineHeight: '0.9', letterSpacing: '-3px' }}>{content.hero.headline1}<br /><span className="text-[#2FA4A9]">{content.hero.headline2}</span></h1>
-            <p className="text-white/70 mb-12 text-xl" style={{ fontFamily: "'Inter', sans-serif", lineHeight: '1.6' }}>{content.hero.subheadline}</p>
+            <h1 className="landing-mobile-hero-title text-white mb-6 sm:mb-8" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '84px', fontWeight: 700, lineHeight: '0.9', letterSpacing: '-3px' }}>{content.hero.headline1}<br /><span className="text-[#2FA4A9]">{content.hero.headline2}</span></h1>
+            <p className="text-white/70 mb-8 sm:mb-12 text-lg sm:text-xl" style={{ fontFamily: "'Inter', sans-serif", lineHeight: '1.6' }}>{content.hero.subheadline}</p>
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="mb-4">
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={content.hero.emailPlaceholder} required disabled={isSubmittingTop} className="flex-1 px-6 bg-white/5 backdrop-blur border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', fontSize: '16px' }} />
                   <button type="submit" disabled={isSubmittingTop} className="bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all flex items-center justify-center gap-3 px-10 group disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.4)' }}>{content.hero.cta}<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
                 </div>
@@ -197,21 +197,21 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-24 border-t border-white/10">
-        <div className="max-w-[1400px] mx-auto px-8">
+      <section className="py-16 sm:py-24 border-t border-white/10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <p className="text-[#2FA4A9] uppercase tracking-[0.24em] text-sm font-semibold mb-5" style={{ fontFamily: "'Inter', sans-serif" }}>{content.aiSection.eyebrow}</p>
             <div className="text-white mb-6 flex flex-col items-center">
-              <h2 style={{ fontFamily: "'Outfit', sans-serif", fontSize: '56px', fontWeight: 700, lineHeight: '1', letterSpacing: '-2px' }}>{content.aiSection.headline1}</h2>
-              <h2 style={{ fontFamily: "'Outfit', sans-serif", fontSize: '56px', fontWeight: 700, lineHeight: '1', letterSpacing: '-2px', whiteSpace: 'nowrap', width: 'fit-content' }}>{content.aiSection.headline2}</h2>
+              <h2 className="landing-mobile-ai-title text-center" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '56px', fontWeight: 700, lineHeight: '1', letterSpacing: '-2px' }}>{content.aiSection.headline1}</h2>
+              <h2 className="landing-mobile-ai-title landing-mobile-ai-title-2 text-center" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '56px', fontWeight: 700, lineHeight: '1', letterSpacing: '-2px', whiteSpace: 'nowrap', width: 'fit-content' }}>{content.aiSection.headline2}</h2>
             </div>
             <p className="text-white/60 text-lg max-w-3xl mx-auto leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>{content.aiSection.caption}</p>
           </div>
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-[1.15fr_auto_1.15fr] gap-8 items-center">
-              <div className="bg-white/5 backdrop-blur border-2 border-dashed border-white/20 p-10 relative" style={{ borderRadius: '4px', minHeight: '240px' }}>
+              <div className="bg-white/5 backdrop-blur border-2 border-dashed border-white/20 p-6 sm:p-10 relative" style={{ borderRadius: '4px', minHeight: '240px' }}>
                 <div className="absolute -top-3.5 left-6 bg-[#151538] px-4 py-1.5 text-xs font-bold text-white/50 uppercase tracking-wider" style={{ fontFamily: "'Inter', sans-serif" }}>User's Chaos</div>
-                <p className="text-white/85 leading-relaxed" style={{ fontFamily: "'Inter', sans-serif", fontSize: '28px', lineHeight: '1.45' }}>{content.aiSection.userInput}</p>
+                <p className="landing-mobile-user-input text-white/85 leading-relaxed" style={{ fontFamily: "'Inter', sans-serif", fontSize: '28px', lineHeight: '1.45' }}>{content.aiSection.userInput}</p>
               </div>
               <div className="flex justify-center lg:block">
                 <div className="relative flex items-center justify-center w-28 h-28">
@@ -223,7 +223,7 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-[#2FA4A9] to-[#238D92] p-10 text-white relative" style={{ borderRadius: '4px', boxShadow: '0 20px 50px rgba(47,164,169,0.5)', minHeight: '240px' }}>
+              <div className="bg-gradient-to-br from-[#2FA4A9] to-[#238D92] p-6 sm:p-10 text-white relative" style={{ borderRadius: '4px', boxShadow: '0 20px 50px rgba(47,164,169,0.5)', minHeight: '240px' }}>
                 <div className="absolute -top-3.5 left-6 bg-[#151538] px-4 py-1.5 text-xs font-bold text-white uppercase tracking-wider" style={{ fontFamily: "'Inter', sans-serif" }}>{content.aiSection.resultLabel}</div>
                 <div className="space-y-2.5">
                   {renderResultRow(content.aiSection.resultTask)}
@@ -238,32 +238,32 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-28 border-t border-white/10 relative overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-8 relative z-10">
+      <section className="py-20 sm:py-28 border-t border-white/10 relative overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 relative z-10">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-white mb-6" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '52px', fontWeight: 700, lineHeight: '1', letterSpacing: '-1.8px' }}>{content.standard.headline}</h2>
+            <h2 className="landing-mobile-standard-title text-white mb-6" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '52px', fontWeight: 700, lineHeight: '1', letterSpacing: '-1.8px' }}>{content.standard.headline}</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {standards.map((item) => <div key={item.number} className="border border-white/10 bg-[#1e1e4a] p-10" style={{ borderRadius: '4px' }}><div className="text-[#2FA4A9] font-bold mb-6" style={{ fontFamily: "'Inter', sans-serif", fontSize: '34px', lineHeight: '1' }}>{item.number}</div><h3 className="text-white mb-4" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '28px', fontWeight: 600, lineHeight: '1.1' }}>{item.title}</h3><p className="text-white/70" style={{ fontFamily: "'Inter', sans-serif", fontSize: '16px', lineHeight: '1.7' }}>{item.text}</p></div>)}
+            {standards.map((item) => <div key={item.number} className="border border-white/10 bg-[#1e1e4a] p-6 sm:p-10" style={{ borderRadius: '4px' }}><div className="text-[#2FA4A9] font-bold mb-6" style={{ fontFamily: "'Inter', sans-serif", fontSize: '34px', lineHeight: '1' }}>{item.number}</div><h3 className="landing-mobile-standard-card-title text-white mb-4" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '28px', fontWeight: 600, lineHeight: '1.1' }}>{item.title}</h3><p className="text-white/70" style={{ fontFamily: "'Inter', sans-serif", fontSize: '16px', lineHeight: '1.7' }}>{item.text}</p></div>)}
           </div>
         </div>
       </section>
 
-      <section className="py-32 border-t border-white/10 bg-[#151538]">
-        <div className="max-w-[1500px] mx-auto px-8">
+      <section className="py-20 sm:py-32 border-t border-white/10 bg-[#151538]">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-8">
           <div className="max-w-3xl mx-auto text-center mb-20">
-            <h2 className="text-white mb-6" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '60px', fontWeight: 700, lineHeight: '1.02', letterSpacing: '-2.2px' }}>{content.community.headline}</h2>
+            <h2 className="landing-mobile-community-title text-white mb-6" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '60px', fontWeight: 700, lineHeight: '1.02', letterSpacing: '-2.2px' }}>{content.community.headline}</h2>
           </div>
           <div className="grid lg:grid-cols-2 gap-10">
-            <div className="border border-white/10 bg-[#2FA4A9] px-11 pt-9 pb-8 flex flex-col" style={{ borderRadius: '16px', minHeight: '290px' }}>
+            <div className="border border-white/10 bg-[#2FA4A9] px-6 sm:px-11 pt-8 sm:pt-9 pb-8 flex flex-col" style={{ borderRadius: '16px', minHeight: '290px' }}>
               <p className="text-[#1e1e4a] uppercase tracking-[0.18em] text-sm font-semibold mb-5" style={{ fontFamily: "'Inter', sans-serif" }}>{content.community.clientEyebrow}</p>
-              <h3 className="text-white mb-5" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '38px', fontWeight: 700, lineHeight: '1.02' }}>{content.community.clientTitle}</h3>
+              <h3 className="landing-mobile-community-card-title text-white mb-5" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '38px', fontWeight: 700, lineHeight: '1.02' }}>{content.community.clientTitle}</h3>
               <p className="text-white/70 mb-12 max-w-[470px] flex-1" style={{ fontFamily: "'Inter', sans-serif", fontSize: '17px', lineHeight: '1.75' }}>{content.community.clientText}</p>
               <button type="button" onClick={() => openSignupModal('client')} className="w-full mt-auto bg-[#1e1e4a] text-white font-semibold hover:bg-[#151538] transition-all px-8 inline-flex items-center justify-center gap-3 group" style={{ fontFamily: "'Inter', sans-serif", height: '58px', borderRadius: '6px', boxShadow: '0 4px 20px rgba(21,21,56,0.28)', fontSize: '18px' }}>{content.community.clientCta}<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
             </div>
-            <div className="border border-white/10 bg-[#1e1e4a] px-11 pt-9 pb-8 flex flex-col" style={{ borderRadius: '16px', minHeight: '290px' }}>
+            <div className="border border-white/10 bg-[#1e1e4a] px-6 sm:px-11 pt-8 sm:pt-9 pb-8 flex flex-col" style={{ borderRadius: '16px', minHeight: '290px' }}>
               <p className="text-[#2FA4A9] uppercase tracking-[0.18em] text-sm font-semibold mb-5" style={{ fontFamily: "'Inter', sans-serif" }}>{content.community.proEyebrow}</p>
-              <h3 className="text-white mb-5" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '38px', fontWeight: 700, lineHeight: '1.02' }}>{content.community.proTitle}</h3>
+              <h3 className="landing-mobile-community-card-title text-white mb-5" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '38px', fontWeight: 700, lineHeight: '1.02' }}>{content.community.proTitle}</h3>
               <p className="text-white/70 mb-12 max-w-[490px] flex-1" style={{ fontFamily: "'Inter', sans-serif", fontSize: '17px', lineHeight: '1.75' }}>{content.community.proText}</p>
               <button type="button" onClick={() => openSignupModal('pro')} className="w-full mt-auto bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all px-8 inline-flex items-center justify-center gap-3 group" style={{ fontFamily: "'Inter', sans-serif", height: '58px', borderRadius: '6px', boxShadow: '0 4px 20px rgba(47,164,169,0.35)', fontSize: '18px' }}>{content.community.proCta}<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
             </div>
@@ -271,26 +271,26 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-28 border-t border-white/10 relative overflow-hidden">
+      <section className="py-20 sm:py-28 border-t border-white/10 relative overflow-hidden">
         <div className="absolute inset-0 bg-[#151538]/58 z-10" />
         <div className="absolute inset-0 z-0"><ImageWithFallback src="https://images.unsplash.com/photo-1476385822777-70eabacbd41f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTdHV0dGdhcnQlMjBHZXJtYW55JTIwY2l0eXNjYXBlJTIwbWFwfGVufDF8fHx8MTc3NDQ4Mzc1N3ww&ixlib=rb-4.1.0&q=80&w=1080" alt="Stuttgart Fernsehturm" className="w-full h-full object-cover opacity-50" /></div>
-        <div className="max-w-[1400px] mx-auto px-8 relative z-20"><div className="max-w-3xl mx-auto text-center"><h2 className="text-white mb-8" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '56px', fontWeight: 700, lineHeight: '1.1', letterSpacing: '-2px' }}>{content.local.headline}</h2><p className="text-white/70 text-xl leading-relaxed" style={{ fontFamily: "'Inter', sans-serif", lineHeight: '1.7' }}>{content.local.subheadline}</p></div></div>
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 relative z-20"><div className="max-w-3xl mx-auto text-center"><h2 className="landing-mobile-local-title text-white mb-8" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '56px', fontWeight: 700, lineHeight: '1.1', letterSpacing: '-2px' }}>{content.local.headline}</h2><p className="text-white/70 text-lg sm:text-xl leading-relaxed" style={{ fontFamily: "'Inter', sans-serif", lineHeight: '1.7' }}>{content.local.subheadline}</p></div></div>
       </section>
 
-      <section className="py-24 border-t border-white/10">
-        <div className="max-w-[1100px] mx-auto px-8">
+      <section className="py-16 sm:py-24 border-t border-white/10">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, idx) => { const Icon = service.icon; return <div key={idx} className="bg-white/5 backdrop-blur border border-white/10 p-12 hover:border-[#2FA4A9]/40 hover:bg-white/10 transition-all group text-center" style={{ borderRadius: '4px' }}><Icon className="w-12 h-12 text-[#2FA4A9] mx-auto mb-6 group-hover:scale-110 transition-transform" strokeWidth={2} /><p className="text-white font-semibold text-lg" style={{ fontFamily: "'Inter', sans-serif" }}>{service.title}</p></div>; })}
+            {services.map((service, idx) => { const Icon = service.icon; return <div key={idx} className="bg-white/5 backdrop-blur border border-white/10 p-8 sm:p-12 hover:border-[#2FA4A9]/40 hover:bg-white/10 transition-all group text-center" style={{ borderRadius: '4px' }}><Icon className="w-12 h-12 text-[#2FA4A9] mx-auto mb-6 group-hover:scale-110 transition-transform" strokeWidth={2} /><p className="text-white font-semibold text-lg" style={{ fontFamily: "'Inter', sans-serif" }}>{service.title}</p></div>; })}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-[#0D0D24] border-t border-white/10">
-        <div className="max-w-[800px] mx-auto px-8 text-center">
-          <h3 className="text-white mb-8" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '42px', fontWeight: 700, lineHeight: '1.1', letterSpacing: '-1px' }}>{content.hero.headline1}<br /><span className="text-[#2FA4A9]">{content.hero.headline2}</span></h3>
+      <section className="py-16 sm:py-20 bg-[#0D0D24] border-t border-white/10">
+        <div className="max-w-[800px] mx-auto px-4 sm:px-8 text-center">
+          <h3 className="landing-mobile-footer-cta-title text-white mb-8" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '42px', fontWeight: 700, lineHeight: '1.1', letterSpacing: '-1px' }}>{content.hero.headline1}<br /><span className="text-[#2FA4A9]">{content.hero.headline2}</span></h3>
           {!isSubmittedBottom ? (
             <form onSubmit={handleSubmitBottom} className="mb-4">
-              <div className="flex gap-3 max-w-xl mx-auto">
+              <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
                 <input type="email" value={emailBottom} onChange={(e) => setEmailBottom(e.target.value)} placeholder={content.hero.emailPlaceholder} required disabled={isSubmittingBottom} className="flex-1 px-6 bg-white/5 backdrop-blur border border-white/20 text-white placeholder:text-white/30 focus:border-[#2FA4A9] focus:outline-none focus:ring-2 focus:ring-[#2FA4A9]/50 transition disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', fontSize: '16px' }} />
                 <button type="submit" disabled={isSubmittingBottom} className="bg-[#2FA4A9] text-white font-semibold hover:bg-[#27939A] transition-all flex items-center justify-center gap-3 px-10 group disabled:opacity-70" style={{ fontFamily: "'Inter', sans-serif", height: '64px', borderRadius: '4px', boxShadow: '0 4px 20px rgba(47,164,169,0.4)' }}>{content.hero.cta}<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} /></button>
               </div>
@@ -301,15 +301,15 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="py-16 bg-[#0D0D24] border-t border-white/10"><div className="max-w-[1400px] mx-auto px-8"><div className="text-center"><div className="text-3xl font-extrabold text-white mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>GILDE</div><p className="text-white/50 text-base" style={{ fontFamily: "'Inter', sans-serif" }}>{content.footer.tagline}</p></div></div></footer>
+      <footer className="py-16 bg-[#0D0D24] border-t border-white/10"><div className="max-w-[1400px] mx-auto px-4 sm:px-8"><div className="text-center"><div className="text-3xl font-extrabold text-white mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>GILDE</div><p className="text-white/50 text-base" style={{ fontFamily: "'Inter', sans-serif" }}>{content.footer.tagline}</p></div></div></footer>
 
       {modalRole && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-6">
           <button type="button" aria-label={content.modal.close} onClick={closeSignupModal} className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-          <div className="relative w-full max-w-[560px] border border-white/10 bg-[#151538] p-8" style={{ borderRadius: '6px', boxShadow: '0 24px 80px rgba(0,0,0,0.45)' }}>
-            <div className="flex items-start justify-between gap-6 mb-8">
+          <div className="relative w-full max-w-[560px] border border-white/10 bg-[#151538] p-5 sm:p-8" style={{ borderRadius: '6px', boxShadow: '0 24px 80px rgba(0,0,0,0.45)' }}>
+            <div className="flex items-start justify-between gap-4 sm:gap-6 mb-8">
               <div>
-                <h3 className="text-white mb-3" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '38px', fontWeight: 700, lineHeight: '1' }}>{content.modal.title}</h3>
+                <h3 className="landing-mobile-modal-title text-white mb-3" style={{ fontFamily: "'Outfit', sans-serif", fontSize: '38px', fontWeight: 700, lineHeight: '1' }}>{content.modal.title}</h3>
                 <p className="text-white/60" style={{ fontFamily: "'Inter', sans-serif" }}>{content.modal.roleLabel}: <span className="text-[#2FA4A9] font-semibold">{selectedRoleLabel}</span></p>
               </div>
               <button type="button" onClick={closeSignupModal} className="text-white/50 hover:text-white transition" style={{ fontFamily: "'Inter', sans-serif" }}>{content.modal.close}</button>

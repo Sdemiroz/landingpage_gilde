@@ -179,3 +179,50 @@
     line-height: 1.5;
   }
 }
+
+@media (max-width: 639px) {
+  .landing-mobile-hero-title {
+    font-size: 56px !important;
+  }
+
+  .landing-mobile-ai-title {
+    font-size: 38px !important;
+  }
+
+  .landing-mobile-ai-title-2 {
+    white-space: normal !important;
+    width: auto !important;
+  }
+
+  .landing-mobile-user-input {
+    font-size: 22px !important;
+  }
+
+  .landing-mobile-standard-title {
+    font-size: 38px !important;
+  }
+
+  .landing-mobile-standard-card-title {
+    font-size: 24px !important;
+  }
+
+  .landing-mobile-community-title {
+    font-size: 40px !important;
+  }
+
+  .landing-mobile-community-card-title {
+    font-size: 30px !important;
+  }
+
+  .landing-mobile-local-title {
+    font-size: 38px !important;
+  }
+
+  .landing-mobile-footer-cta-title {
+    font-size: 32px !important;
+  }
+
+  .landing-mobile-modal-title {
+    font-size: 28px !important;
+  }
+}
