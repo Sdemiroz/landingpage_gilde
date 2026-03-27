@@ -225,4 +225,24 @@
   .landing-mobile-modal-title {
     font-size: 28px !important;
   }
+
+  .landing-mobile-signup-stack {
+    gap: 10px !important;
+  }
+
+  .landing-mobile-signup-input {
+    width: 100% !important;
+    height: 60px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    font-size: 16px !important;
+  }
+
+  .landing-mobile-signup-button {
+    align-self: flex-start !important;
+    height: 54px !important;
+    font-size: 15px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
 }
