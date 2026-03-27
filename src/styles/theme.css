@@ -246,3 +246,26 @@
     padding-right: 20px !important;
   }
 }
+
+@media (max-width: 420px) {
+  .landing-mobile-signup-stack {
+    width: 100% !important;
+  }
+
+  .landing-mobile-signup-input {
+    width: 100% !important;
+    min-height: 58px !important;
+    height: 58px !important;
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+  }
+
+  .landing-mobile-signup-button {
+    width: 100% !important;
+    align-self: stretch !important;
+    min-height: 58px !important;
+    height: 58px !important;
+    justify-content: center !important;
+    font-size: 16px !important;
+  }
+}
